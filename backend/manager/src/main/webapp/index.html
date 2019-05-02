@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript" src="static/layui.all.js"></script>
+<script type="text/javascript" src="static/jquery3.2.1.min.js"></script>
+<script type="text/javscript" src="static/_internal.js"></script>
+<link rel="stylesheet" href="static/css/layui.css" />
+<meta charset="UTF-8"/>
+<meta name="keywords" content="校园管理,资源管理,管理系统"/>
+<meta name='description' content="校园一体化资源管理系统：.......">
+<title>校园一体化资源管理系统</title>
+<style type="text/css">
+html,body{
+width:100%;
+height:auto;
+}
+.container{
+width:100%;
+height:auto;
+}
+.max-width{
+width:100%;
+}
+.header{
+position:fixed !important;
+width:100%;
+}
+.layout-right-0m{
+    position: absolute !important;
+	right: 0;
+}
+.layout-right-1m{
+    position: absolute !important;
+	right:10%;
+}
+.layout-right-2m{
+   position:absolute !important;
+   right:20%;
+}
+.carousel-height{
+height:30rem;
+}
+.text-title{
+font-size:2rem;
+text-align:center;
+}
+.text-content{
+font-size:1rem;
+}
+.item{
+margin-top:2rem;
+}
+.auto-height{
+height:auto;
+}
+.exhibit-item{
+position:relative;
+float:left;
+}
+.exhibit-item-img{
+position:relative;
+left:10%;
+width:80%;
+height:10rem;
+}
+.view-hide{
+display:none;
+}
+.dialog-size{
+width:30rem;
+height:30rem;
+}
+.login-bg{
+background-image:url(static/images/login.jpg);
+background-repeat:no-repeat;
+background-size: cover;
+}
+.reg-bg{
+background-image:url(static/images/reg.jpg);
+background-repeat:no-repeat;
+background-size:cover;
+}
+.view-center{
+position:relative;
+width:20rem;
+height:20rem;
+left:2rem;
+top:5rem;
+}
+.verify-code{
+width:100;
+height:50;
+}
+</style>
+<script type="text/javascript" src="static/_internal.js"></script>
+<script type="text/javascript">
+var layer,loginLayer,regLayer;
+var form;
+var loginVerify,regVerify;
+$(window).ready(function(){
+	layer=layui.layer;
+	form=layui.form;
+	loginVerify=new VerificationDrawer();
+	regVerify=new VerificationDrawer();
+	
+	layui.carousel.render({
+	elem:"#carousel",
+	width:"100%",
+	height:"30rem",
+	arrow:"aways",
+	anim:"default"
+	});
+	
+	form.on("submit(login)",function(data){
+	   if(check(data,loginVerify)){
+		      console.log(true);
+	   }
+	   return false;
+	});
+	form.on("submit(reg)",function(data){
+	   if(check(data,regVerify)){
+		   
+	   }
+	   return false;
+	})
+	
+	loginCanvas=loginVerify.createCanvas();
+	regCanvas=regVerify.createCanvas();
+	$(loginCanvas).css({width:'15rem',height:'4rem'});
+	$(regCanvas).css({width:'15rem',height:'4rem'});
+	
+	loginCanvasLabel=$("#login-verify-code");
+	regCanvasLabel=$("#reg-verify-code");
+	loginCanvasLabel.append(loginCanvas);
+	regCanvasLabel.append(regCanvas);
+	loginCanvasLabel.click(function(){
+		loginVerify.reDraw();
+	})
+	regCanvasLabel.click(function(){
+		regVerify.reDraw();
+	})
+	
+})
+
+function check(data,verify){
+	if(verify.getNumbers()===data.field.verified.replace(" ",""))
+	return true;
+	return false;
+}
+function showLoginDialog(){
+loginLayer=layer.open({
+	title:"登陆",
+	type:1,
+	content:$('#login'),
+	anim:1,
+	resize:false,
+	area:['30rem','30rem'],
+	cancel:function(){
+		$('#login').hide();
+	}
+	});
+
+}
+
+function showRegDialog(){
+ regLayer=layer.open({
+		title:"注册",
+		type:1,
+		content:$('#reg'),
+		anim:1,
+		resize:false,
+		area:['30.5rem','30.5rem'],
+		cancel:function(){
+			$('#reg').hide();
+		}
+		});
+
+}
+
+function hideDialog(){
+	var dialogs=[$('#login'),$('#reg')];
+	dialogs.forEach(function(item){
+		item.hide();
+	});
+}
+function goReg(){
+	if(loginLayer!=null){
+		layer.close(loginLayer);
+	}
+	hideDialog();
+	showRegDialog();	
+}
+function goLogin(){
+	if(regLayer!=null){
+		layer.close(regLayer);
+	}
+	hideDialog();
+	showLoginDialog();
+	
+}
+</script>
+</head>
+<body>
+<div class="container">
+<div class="layui-header header">
+<div class="layui-main max-width">
+<ul class="layui-nav">
+<li class="layui-nav-item"><a href="#news">最新资讯</a></li>
+<li class="layui-nav-item"><a href="#exhibit">展示栏</a></li>
+<li class="layui-nav-item"><a href="#about">关于</a></li>
+<li class="layui-nav-item layout-right-2m"><a href="javascript:showLoginDialog()"><img class="layui-nav-img" src="static/images/login.jpg"/>登陆</a></li>
+<li class="layui-nav-item layout-right-1m"><a href="javascript:showRegDialog()"><img class="layui-nav-img" src="static/images/reg.jpg"/>注册</a></li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="max-width carousel-height layui-bg-green">
+<div class="layui-carousel" id="carousel">
+  <div carousel-item>
+  <img src="static/images/show1.jpeg"/>
+  <img src="static/images/show2.jpg"/>
+  <img src="static/images/show3.jpg"/>
+  </div>
+</div>
+</div>
+
+<div class="max-width item">
+  <div class="layui-row max-width  layui-bg-green">
+    <div class="layui-col-md4" id="news">
+      <p class="text-title">腾讯智慧校园平台的应用工作</p>
+      <p class="text-content">
+      为了进一步推动腾讯智慧校园平台的应用工作，加快学校教育信息化、现代化发展步伐，促进信息技术与学校管理、教学资源、家校联系的深度融合，全面了解“腾讯智慧校园”在应用中存在的问题。4月23日下午，河南省电教馆一行7人到上街区调研腾讯智慧校园建设与应用试点区工作。上街区教体局、区属学校校长、管理员20余人参加了调研会。
+
+  调研会现场
+
+     会上，试点区学校对腾讯智慧校园应用的使用上的心得进行了反馈，普遍认可了腾讯智慧校园给学校管理带来的便捷服务。实验初中讲述了本校在腾讯智慧校园的基础上结合企业微信的深化使用心得，曙光小学站在教育教学一线的角度对腾讯的深度应用提出了深度的思考。
+
+     郑州市信息中心主任助理郭向敏表示，上街区腾讯智慧校园试点区的工作做得非常扎实，从中看出了上街区教育系统踏实、务实的工作作风，同时也希望上街区可以招聘一些专业的信息化的人才充实到教师队伍中，以更好的促进上街区教育信息化工作的良性发展。
+
+     最后，省电教馆副馆长刘新超高度肯定了本次调研会，并对上街区的教育信息化工作发展提出了要求，一是上街区要站在未来的高度对本区的教育信息化发展做出一个整体完善的规划，这个规划将指引上街区的教育信息化发展方向。二是一起信息技术都要建立在网络的基础之上，因此要建设宽带网络的高速公路。三是要逐步让众多的系统、软件实现互联互通。
+
+     上街区借本次调研会的契机，继续深化腾讯智慧校园的试点工作，努力将上街区打造成为腾讯智慧校园的示范区！
+      </p>
+    </div>
+    <div class="layui-col-md4 news-height">
+      <p class="text-title">
+      资源
+      </p>
+      <p class="text-content">
+      马克思在《资本论》中说：“劳动和土地，是财富两个原始的形成要素。”恩格斯的定义是：“其实，劳动和自然界在一起它才是一切财富的源泉，自然界为劳动提供材料，劳动把材料转变为财富。”（《马克思恩格斯选集》第四卷，第373页，1995年6月第2版。）马克思、恩格斯的定义，既指出了自然资源的客观存在，又把人（包括劳动力和技术）的因素视为财富的另一不可或缺的来源。可见，资源的来源及组成，不仅是自然资源，而且还包括人类劳动的社会、经济、技术等因素，还包括人力、人才、智力（信息、知识）等资源。据此，所谓资源指的是一切可被人类开发和利用的物质、能量和信息的总称，它广泛地存在于自然界和人类社会中，是一种自然存在物或能够给人类带来财富的财富。或者说，资源就是指自然界和人类社会中一种可以用以创造物质财富和精神财富的具有一定量的积累的客观存在形态，如土地资源、矿产资源、森林资源、海洋资源、石油资源、人力资源、信息资源等。
+      </p>
+    </div>
+    <div class="layui-col-md4 news-height">
+    <p class="text-title">
+    校园
+    </p>
+    <p class="text-content">
+    大学学习是一种“自主学习”，学什么、怎么学、学到什么程度基本上都由自己决定，学校和老师的要求只是辅助性的。学习的方式也发生了变化，虽然也有老师的督导，但这种督导大大减弱了。从中学到大学，对学生的外界督导减少了，学生的自由增加了。自由度变大了，责任也变大了，很多学生往往意识不到这一点，第一学期就出现不及格现象，这时才大吃一惊。
+重新认识自己——多元发展
+在大学里，每个同学都要面临一个非常严峻的挑战，就是如何客观地认识和评价自己及所面临的处境。有一个词叫做“大学生的平庸化”，说的是有的学生在上大学之前都是出类拔萃的、优秀的，但上了大学之后却发现自己变得很平庸，没有那么突出了。记者的一位朋友在上大学之前，从来都是班里、年级里的第一名，毫无悬念地考上了重点大学，然而在大一期间因为班里的同学都是来自全国各地的优等生，他再也不是佼佼者了，他在期末考试时居然破天荒地出现了不及格现象。
+    </p>
+    </div>
+  </div>
+</div>
+
+<div  class="auto-height layui-container max-width item layui-bg-blue">
+<div class="layui-row max-width" id="exhibit">
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">电脑</p>
+<img class="exhibit-item-img" src="static/images/computer.jpg"/>
+</div>
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">图书</p>
+<img class="exhibit-item-img" src="static/images/book.jpg"/>
+</div>
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">椅子</p>
+<img class="exhibit-item-img" src="static/images/chair.jpg"/>
+</div>
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">粉笔</p>
+<img class="exhibit-item-img" src="static/images/chalk.jpg"/>
+</div>
+</div>
+<div class="layui-row">
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">教室</p>
+<img class="exhibit-item-img" src="static/images/classroom.jpg"/>
+</div>
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">桌子</p>
+<img class="exhibit-item-img" src="static/images/desktop.jpg"/>
+</div>
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">笔记本</p>
+<img class="exhibit-item-img" src="static/images/notepad.jpg"/>
+</div>
+<div class="layui-col-md3 exhibit-item">
+<p class="text-title">笔</p>
+<img class="exhibit-item-img" src="static/images/pen.jpg"/>
+</div>
+</div>
+</div>
+
+<div id="about" class="layui-container max-width layui-bg-cyan item">
+<div class="layui-row">
+<p class="text-title">校园一体化资源管理V1.0</p>
+</div>
+<div class="layui-row">
+<p class="text-title">
+本系统由XXX所有
+</p>
+</div>
+<div class="layui-row">
+<p class="text-title">
+友情链接
+</p>
+</div>
+<div class="layui-row">
+<div class="layui-col-md4">
+<p class="text-title">XXXXX</p>
+</div>
+<div class="layui-col-md4">
+<p class="text-title">XXXXX</p>
+</div>
+<div class="layui-col-md4">
+<p class="text-title">XXXXX</p>
+</div>
+</div>
+</div>
+</body>
+<div id="login" class="view-hide dialog-size login-bg">
+<form class="layui-form view-center">
+<div class="layui-form-item">
+<label class="layui-form-label">用户</label>
+<div class="layui-input-block">
+<input type="text" name="user" class="layui-input" placeholder="请输入账号" required  lay-verify="required" pattern="[a-z0-9]{6,10}"/>
+</div>
+</div>
+
+<div class="layui-form-item">
+<label class="layui-form-label">密码</label>
+<div class="layui-input-block">
+<input type="password" name="pwd" class="layui-input" placeholder="请输入密码" required lay-verify="required" pattern="[a-z0-9]{6,10}" />
+</div>
+</div>
+
+<diV class="layui-form-item">
+<label class="layui-form-label verify-code" id="login-verify-code"></label>
+<div class="layui-input-block">
+<input type="text" name="verified" class="layui-input" placeholder="验证码" required lay-verify="required"/>
+</div>
+</diV>
+<div class="layui-form-item">
+<div class="layui-input-block">
+<button class="layui-btn max-width" lay-submit lay-filter="login">登陆</button>
+</div>
+</div>
+<div class="layui-form-item">
+<div class="layui-input-block">
+<button type="button" class="layui-btn max-width" onclick="goReg()">注册</button>
+</div>
+</div>
+</form>
+</div>
+<div id="reg" class="dialog-size view-hide reg-bg">
+<form class="layui-form view-center">
+<div class="layui-form-item">
+<label class="layui-form-label">用户</label>
+<div class="layui-input-block">
+<input type="text" name="user" class="layui-input" placeholder="请输入账号" required  lay-verify="required" pattern="[a-z0-9]{6,10}"/>
+</div>
+</div>
+<div class="layui-form-item">
+<label class="layui-form-label">密码</label>
+<div class="layui-input-block">
+<input type="password" name="pwd" class="layui-input" placeholder="请输入密码" required lay-verify="required" pattern="[a-z0-9]{6,10}" />
+</div>
+</div>
+
+<diV class="layui-form-item">
+<label class="layui-form-label verify-code" id="reg-verify-code"></label>
+<div class="layui-input-block">
+<input type="text" name="verified" class="layui-input" placeholder="验证码" required lay-verify="required"/>
+</div>
+</diV>
+<div class="layui-form-item">
+<div class="layui-input-block">
+<button class="layui-btn max-width" lay-submit lay-filter="reg">注册</button>
+</div>
+</div>
+<div class="layui-form-item">
+<div class="layui-input-block">
+<button type="button" class="layui-btn max-width" onclick="goLogin()">登陆</button>
+</div>
+</div>
+</form>
+</div>
+</html>

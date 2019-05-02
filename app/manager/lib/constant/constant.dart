@@ -26,3 +26,5 @@ String PWD="密码";
 String HINT_USER="请输入用户";
 String HINT_PWD="请输入密码";
 String HINT_ERROR="账户或密码错误";
+
+String SETING="设置";

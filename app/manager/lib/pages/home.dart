@@ -13,10 +13,12 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final HOME_WIDGET=buildHomePage();
-  final ABOUT_WIDGET=buildAboutPage();
+  Widget HOME_WIDGET;
+  Widget ABOUT_WIDGET;
   Widget body;
   _MyHomePageState(){
+    HOME_WIDGET=buildHomePage(this);
+    ABOUT_WIDGET=buildAboutPage(this);
     body=HOME_WIDGET;
   }
   //改变主题
