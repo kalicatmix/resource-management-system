@@ -110,16 +110,41 @@ $(window).ready(function(){
 	arrow:"aways",
 	anim:"default"
 	});
+	//bug
+	$("#loginForm").get(0).reset();
 	
 	form.on("submit(login)",function(data){
 	   if(check(data,loginVerify)){
-		      console.log(true);
+		   var type=data.field.switch==="on"?"admin":"user";
+		   $.post("web/login",{user:data.field.user,pwd:data.field.pwd,type:type},function(data){
+			   //var token=data.t.token;
+			   if(data.message===0){
+				   layer.msg("账户或密码错误");
+			   }else if(data.message===255){
+				   window.location.href="web";
+				   document.cookie+="token="+token;
+			   }else{
+				   layer.msg("用户已经登陆了");
+				   window.location.href="web";
+			   }
+		   })
+	   }else{
+	   layer.msg("验证码错误");
 	   }
 	   return false;
 	});
 	form.on("submit(reg)",function(data){
 	   if(check(data,regVerify)){
-		   
+		   $.post("api/user/add",{user:data.field.user,pwd:data.field.pwd,changeword:data.field.changeword},function(data){
+			   
+			    if(data.message===0){
+				   layer.msg("账户已被注册过了，换一个吧");
+			   }else if(data.message===0xffffff){
+				   layer.msg("注册成功了");
+			   }
+		   })
+	   }else{
+		   layer.msg("验证码错误");
 	   }
 	   return false;
 	})
@@ -331,7 +356,7 @@ function goLogin(){
 </div>
 </body>
 <div id="login" class="view-hide dialog-size login-bg">
-<form class="layui-form view-center">
+<form id="loginForm" class="layui-form view-center">
 <div class="layui-form-item">
 <label class="layui-form-label">用户</label>
 <div class="layui-input-block">
@@ -351,7 +376,15 @@ function goLogin(){
 <div class="layui-input-block">
 <input type="text" name="verified" class="layui-input" placeholder="验证码" required lay-verify="required"/>
 </div>
-</diV>
+</div>
+
+<div class="layui-form-item">
+<label class="layui-form-label">管理员</label>
+<div class="layui-input-block">
+      <input type="checkbox" name="switch" lay-skin="switch">
+</div>
+</div>
+
 <div class="layui-form-item">
 <div class="layui-input-block">
 <button class="layui-btn max-width" lay-submit lay-filter="login">登陆</button>
@@ -365,7 +398,7 @@ function goLogin(){
 </form>
 </div>
 <div id="reg" class="dialog-size view-hide reg-bg">
-<form class="layui-form view-center">
+<form id="regForm" class="layui-form view-center">
 <div class="layui-form-item">
 <label class="layui-form-label">用户</label>
 <div class="layui-input-block">
@@ -379,12 +412,21 @@ function goLogin(){
 </div>
 </div>
 
+<div class="layui-form-item">
+<label class="layui-form-label">注册码</label>
+<div class="layui-input-block">
+<input type="password" name="changeword" class="layui-input" placeholder="更改密码需要" required lay-verify="required" pattern="[0-9]{6,10}" />
+</div>
+</div>
+
 <diV class="layui-form-item">
 <label class="layui-form-label verify-code" id="reg-verify-code"></label>
 <div class="layui-input-block">
 <input type="text" name="verified" class="layui-input" placeholder="验证码" required lay-verify="required"/>
 </div>
 </diV>
+
+
 <div class="layui-form-item">
 <div class="layui-input-block">
 <button class="layui-btn max-width" lay-submit lay-filter="reg">注册</button>

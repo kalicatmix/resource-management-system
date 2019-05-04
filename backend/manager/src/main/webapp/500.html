@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<head>
+<meta charset="UTF-8"/>
+<meta name="keywords" content="校园管理,资源管理,管理系统"/>
+<meta name='description' content="校园一体化资源管理系统：.......">
+<title>校园一体化资源管理系统</title>
+<style type="text/css">
+html,body{
+width:98%;
+height:98%;
+overflow:none;
+font-size:15px;
+color:white;
+}
+.box{
+position:relative;
+top:0%;
+left:11%;
+width:80%;
+height:80%;
+animation:dropdown 2s;
+border-color:#009688;
+border-radius:1rem;
+border-style:solid;
+box-shadow:0.5rem 0.5rem #009688;
+background-image:url(/manager/static/images/reg.jpg);
+background-repeat:no-repeat;
+background-size:100% 100%;
+background-attachment:fixed
+}
+@keyframes dropdown{
+from {top:-80%};
+to {top:10%}
+}
+.main-content{
+font-size:5rem;
+text-shadow:0.3rem 0.3rem black;
+}
+.center{
+text-align:center;
+}
+.btn-back{
+background:#009688;
+width:10rem;
+height:5rem;
+border-radius:1rem;
+border-style:none;
+outline:none;
+color:white;
+}
+.btn-back:hover{
+background:gray;
+}
+</style>
+</head>
+<body>
+<div class="box">
+<h1 class="main-content center">
+站点似乎出现了一些问题哟
+</h1>
+<h1 class="center"><button onclick="window.location.href='/manager/index.html'" class="btn-back">回到主页</button>
+</h1>
+</div>
+</body>
+</html>
