@@ -28,3 +28,11 @@ String HINT_PWD="请输入密码";
 String HINT_ERROR="账户或密码错误";
 
 String SETING="设置";
+
+//api interface
+
+String SERVER_ADRESS="......";
+String TOKEN;
+String API_USER="api/user/";
+String API_ADMIN="api/admin/";
+String API_ITEM="api/item/";

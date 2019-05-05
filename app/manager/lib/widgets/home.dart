@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:manager/var/var.dart';
-
+import 'package:manager/api/api.dart';
+import 'package:manager/constant/constant.dart';
 Image buildItemImage(String path){
   return Image(
     fit: BoxFit.cover,
@@ -28,7 +29,11 @@ Widget buildHomePage(state){
            margin: EdgeInsets.all(2),
            child: GestureDetector(
            onTap: (){
-             print("$index is taped");
+            showDialog(context: context,builder: (context){
+              String result;
+              ApiManager().get(SERVER_ADRESS+API_ITEM+items[index]['name']+TOKEN).then((res){result=res;});
+              return Dialog(child: Text(result));
+            });
            },
            child: Column(
            children: <Widget>[
