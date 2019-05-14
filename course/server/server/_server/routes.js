@@ -8,7 +8,7 @@ var router = new Router()
 var errorMessage = messageBuilder.buildErrorMessage()
 //用户
 router.post("/user/add", async (ctx) => {
-    var user = ctx.query
+    var user = ctx.request.body
     await service.getRepo().addUser(user).then(res => {
         var message
         if (res.err)
@@ -42,13 +42,52 @@ router.get("/user/update/:key/:value",async (ctx)=>{
     })}
 })
 
+router.post("/user/update/pwd",async (ctx)=>{ 
+    var param=ctx.request.body
+    var uid= ctx.cookies.get('uid')
+    var user=session.getSession(uid)
+    if(!user||user.pwd!=param.oldpwd)
+    {
+     ctx.body=errorMessage
+    }else{
+    user['pwd']=param.newpwd
+    await service.getRepo().updateUser(user).then(res=>{
+        var message
+        if (res.err)
+            message = errorMessage
+        else
+            message = messageBuilder.buildMessage({ updated: true })
+            ctx.body = message
+    }).catch(e=>{
+       ctx.body=errorMessage
+    })}
+})
+
+router.get("/user/query/:info",async (ctx)=>{ 
+    var param=ctx.params
+    var uid= ctx.cookies.get('uid')
+    var user=session.getSession(uid)
+    if(!user)
+    {
+     ctx.body=errorMessage
+    }else{
+        var message
+        if(param.key=="pwd"){
+            message=errorMessage
+        }else{
+       var result=user[param.info]
+       message = messageBuilder.buildMessage({ info:result})
+        }
+       ctx.body = message
+    }
+        })
 //登陆
 router.get("/login",ctx=>{
 ctx.body=errorMessage
 })
 
 router.post("/login", async (ctx) => {
-    var user = ctx.query
+    var user = ctx.request.body
     var message = errorMessage
     await service.getRepo().queryUser(user).then((res) => {
         var message
@@ -76,7 +115,7 @@ router.post("/login", async (ctx) => {
 
 //课程
 router.post("/course/add", async (ctx) => {
-    var param=ctx.query
+    var param=ctx.request.body
     var uid= ctx.cookies.get('uid')
     var user=session.getSession(uid)
     if(!user)
@@ -97,7 +136,7 @@ router.post("/course/add", async (ctx) => {
 })
 
 router.post("/course/del", async (ctx) => {
-    var param=ctx.query
+    var param=ctx.request.body
     var uid= ctx.cookies.get('uid')
     var user=session.getSession(uid)
     if(!user)
@@ -135,6 +174,32 @@ router.get("/course/query", async (ctx) => {
        ctx.body=errorMessage
     })}
 })
+
+router.post("/course/size", async (ctx) => {
+    var param
+    try{
+    param=JSON.parse(ctx.request.body.courses)
+    }catch(e){
+       ctx.body=errorMessage 
+    }
+    await service.getRepo().queryCouseSize(param).then(res=>{
+            var message
+            if(res.err){
+            message=errorMessage
+            }
+            else
+            {   var result=[]
+                var results=res.result
+                for(var item of results)
+                result.push(item.length)    
+            message = messageBuilder.buildMessage({ result:result})
+            }
+            ctx.body = message
+    }).catch(e=>{
+       ctx.body=errorMessage
+    })}
+
+)
 
 router.get("/type/query", async (ctx) => {
     await service.getRepo().queryCourseTypes().then(res=>{

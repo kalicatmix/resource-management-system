@@ -8,12 +8,13 @@ module.exports = {
     */
     init() {
         this._pool = mysql.createPool({
-            connectionLimit: 5,
+            connectionLimit:30,
             host: 'localhost',
             user: 'root',
             password: 'mysqlinnod',
             database: 'course',
-            charset: 'utf8'
+            charset: 'utf8',
+            multipleStatements:true
         })
     },
     errors: {
@@ -29,6 +30,19 @@ module.exports = {
             console.log(err)
             callback({err,result})
         })
+    },
+    _queryByMultiSql(sqls,callback){
+        if (undefined == this._pool)
+        throw "please init repository first"
+        var sqlTemp=""
+        for(var sql of sqls){
+            sqlTemp+=sql+";"
+        }
+        this._pool.query(sqlTemp, (err, result) => {
+        if(err)
+        console.log(err)
+        callback({err,result})
+    })
     },
     _filterInput(input) {
         var filters = [/\sand\s/i, /\sor\s/i]
@@ -88,8 +102,8 @@ module.exports = {
     },
     updateUser(user) {
         return new Promise((resolve, reject) => {
-            var sql = "update user set name=?,user=?,pwd=?,email=?,luckynumber=? where user=? and pwd=?"
-            var items = [user.name, user.user, user.pwd, user.email, user.luckynumber, user.user, user.pwd]
+            var sql = "update user set name=?,user=?,pwd=?,email=?,luckynumber=? where user=?"
+            var items = [user.name, user.user, user.pwd, user.email, user.luckynumber,user.user]
             if (this._filterInputs(items))
                 reject()
             sql = mysql.format(sql, items)
@@ -141,5 +155,29 @@ module.exports = {
             this._queryBySql(sql, resolve)
         })
 
+    },
+    queryCourse(course) {
+        return new Promise((resolve, reject) => {
+            var sql = "select * from course where name=?"
+            if (this._filterInput(course))
+                reject()
+            sql = mysql.format(sql, [course])
+            this._queryBySql(sql, resolve)
+        })
+    
+    },
+    queryCouseSize(courses){
+        return new Promise((resolve, reject) => {
+            var sqls=[]
+            for(var course of courses){
+            var sql = "select * from course where name=?"
+            if (this._filterInput(course))
+                reject()
+            sql = mysql.format(sql, [course])
+            sqls.push(sql)
+            }   
+            this._queryByMultiSql(sqls,resolve)
+        })
+        
     },
 }
